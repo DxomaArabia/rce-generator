@@ -29,10 +29,10 @@ To download and run the tool on your system, execute the following commands in y
 
 ```bash
 # Clone the repository
-git clone [https://github.com/DxomaArabia/rce-generator.git](https://github.com/DxomaArabia/rce-generator.git)
+git clone https://github.com/DxomaArabia/rce-generator.git
 
 # Navigate into the project directory
 cd rce-generator
 
 # Execute the application
-python tool.py
+python main.py
